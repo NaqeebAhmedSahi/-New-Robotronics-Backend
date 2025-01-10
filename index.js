@@ -20,7 +20,7 @@ const cvFormRouter = require('./Router/cvFormRouter.js');
 const counterRoutes = require('./Router/counterRouter.js');
 const roboGeniusRouter = require('./Router/roboGeniusRouter.js');
 const videogalleryRouter = require('./Router/videogalleryRouter.js');
-
+const path = require("path");
 
 
 
@@ -31,6 +31,8 @@ app.use(express.urlencoded({ extended:true }));
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Route to handle POST requests for contact
 app.post("/contact", contactRouter);
