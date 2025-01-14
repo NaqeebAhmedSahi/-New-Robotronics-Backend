@@ -10,7 +10,8 @@ const {
   getUser,
   forgotPassword,
   resetPassword,
-  logout
+  logout,
+  updatePatchUserProfile
   // deleteUser,
 } = require("../Controller/authController");
 
@@ -30,6 +31,8 @@ router.get("/me", getUserProfile);    //router.get("/me", protect, getUserProfil
 
 // update user profile
 router.put("/me", updateUserProfile); //router.put("/me", protect, updateUserProfile);
+
+router.patch("/patchMe", updatePatchUserProfile); 
 
 // create new user
 router.post('/',createUser);
