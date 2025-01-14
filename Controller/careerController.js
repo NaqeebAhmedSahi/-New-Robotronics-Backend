@@ -1,4 +1,4 @@
-const Job = require('../models/CareerModel');
+import Job from '../models/CareerModel';
 
 const createJob = async (req, res) => {
   try {
@@ -50,7 +50,7 @@ const deleteJob = async (req, res) => {
 };
 
 // Export the controller functions as an object
-module.exports = {
+export {
   createJob,
   getAllJobs,
   getJobById,

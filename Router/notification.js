@@ -1,14 +1,14 @@
 // routes/notificationRoutes.js
-const express = require("express");
+import express  from "express";
 const router = express.Router();
-const { protectC } = require("../middleware/courseMiddleware");
-const {
+import { protectC } from "../middleware/courseMiddleware.js";
+import {
   getNotifications,
   markAsRead,
-} = require("../Controller/notification");
+} from "../Controller/notification.js";
 
 router.get("/" , protectC, getNotifications);
 
 router.put("/:id/read",protectC, markAsRead);
 
-module.exports = router;
+export default router;

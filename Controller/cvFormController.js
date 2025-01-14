@@ -1,5 +1,5 @@
 // // controllers/cvFormController.js
-const cvFormModel = require('../models/cvFormModel');
+import cvFormModel from '../models/cvFormModel.js';
 
 const createJobApplication = async (req, res) => {
     try {
@@ -65,7 +65,7 @@ const getAllApplications = async (req, res) => {
   };
 
 
-  module.exports = {getAllApplications, createJobApplication };
+export {getAllApplications, createJobApplication };
 // for postman testing
 // const cvFormModel = require('../models/cvFormModel');
 

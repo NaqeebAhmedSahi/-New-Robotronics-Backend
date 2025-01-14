@@ -1,9 +1,8 @@
+import User from '../models/User.js';
+import Course from '../models/courseModel.js';
 
-const User = require('../models/User');
-const Course = require('../models/courseModel');
-
-//   Get a list of all users (Admin only)
-const getAllUsers = async (req, res) => {
+// Get a list of all users (Admin only)
+export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json({
@@ -20,7 +19,7 @@ const getAllUsers = async (req, res) => {
 };
 
 // Delete a user by ID (Admin only)
-const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
   try {
     // Ensure the user is an admin
     if (!req.user || !req.user.isAdmin) {
@@ -55,8 +54,8 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// Get a list of all courses (Admin only).
-const getAllCourses = async (req, res) => {
+// Get a list of all courses (Admin only)
+export const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find().populate(
       "instructor",
@@ -76,7 +75,7 @@ const getAllCourses = async (req, res) => {
 };
 
 // Delete a course by ID (Admin only)
-const deleteCourse = async (req, res) => {
+export const deleteCourse = async (req, res) => {
   try {
     // Ensure the user is an admin
     if (!req.user || !req.user.isAdmin) {
@@ -112,7 +111,7 @@ const deleteCourse = async (req, res) => {
 };
 
 // Get site-wide reports and analytics (Admin only)
-const getReports = async (req, res) => {
+export const getReports = async (req, res) => {
   try {
     // Ensure the user is an admin
     if (!req.user || !req.user.isAdmin) {
@@ -157,12 +156,4 @@ const getReports = async (req, res) => {
       message: `Server Error. Please try again later. ${error.message}`,
     });
   }
-};
-
-module.exports = {
-  getAllUsers,
-  deleteUser,
-  getAllCourses,
-  deleteCourse,
-  getReports
 };

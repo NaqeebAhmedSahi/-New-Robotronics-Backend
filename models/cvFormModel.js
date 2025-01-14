@@ -1,5 +1,5 @@
 // models/cvFormModel.js
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const cvFormSchema = new mongoose.Schema({
     firstName: { type: String, required: true, trim: true },
@@ -19,4 +19,4 @@ const cvFormSchema = new mongoose.Schema({
 });
 
 const cvFormModel = mongoose.model('JobApplication', cvFormSchema);
-module.exports = cvFormModel;
+export default cvFormModel;

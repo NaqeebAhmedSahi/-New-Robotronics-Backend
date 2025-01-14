@@ -1,8 +1,8 @@
 // routes/cvFormRouter.js
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const { createJobApplication , getAllApplications} = require('../Controller/cvFormController');
+import express  from "express";
+import multer from "multer";
+import path from  "path";
+import { createJobApplication , getAllApplications} from '../Controller/cvFormController.js';
 
 const router = express.Router();
 
@@ -33,4 +33,4 @@ router.post('/', upload.single('cvFile'), createJobApplication);
 router.get('/getAllApplication', getAllApplications);
 
 
-module.exports = router;
+export default router;

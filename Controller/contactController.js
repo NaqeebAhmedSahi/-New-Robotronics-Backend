@@ -1,5 +1,5 @@
 
-const Contact = require('../models/contactModel'); // Adjust path if needed
+import  Contact from '../models/contactModel.js'; // Adjust path if needed
 
 const createContact = async (req, res) => {
   console.log("Request body:", req.body); // Check if body data is as expected
@@ -57,4 +57,4 @@ const getAllContact = async (req, res) => {
   
 
 // At the end of the file
-module.exports = { createContact , getAllContact};
+export { createContact , getAllContact};

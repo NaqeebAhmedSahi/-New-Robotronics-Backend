@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const videoGallerySchema = new mongoose.Schema({
   thumbnail: { type: String, required: true },
@@ -14,4 +14,4 @@ const videoGallerySchema = new mongoose.Schema({
 const VideoGallery =
   mongoose.models.VideoGallery || mongoose.model("VideoGallery", videoGallerySchema);
 
-module.exports = VideoGallery;
+export default VideoGallery;

@@ -1,13 +1,14 @@
-
-require("dotenv").config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 console.log("JWT_SECRET:", process.env.JWT_SECRET); // Debug line to check JWT_SECRET
 
-const User = require("../models/User");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const nodemailer = require('nodemailer');
-const mongoose = require('mongoose');
+import User from '../models/User.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
+import mongoose from 'mongoose';
+import crypto from 'crypto';
 
 // Register a new user
 const register = async (req, res) => {
@@ -82,31 +83,6 @@ const login = async (req, res) => {
 };
 
 // Update user profile
-// const updateUserProfile = async (req, res) => {
-//   const user = await User.findById(req.user.id);
-
-//   if (user) {
-//     user.name = req.body.name || user.name;
-//     user.email = req.body.email || user.email;
-
-//     if (req.body.password) {
-//       user.password = req.body.password;
-//     }
-
-//     const updatedUser = await user.save();
-
-//     res.json({
-//       _id: updatedUser._id,
-//       name: updatedUser.name,
-//       email: updatedUser.email,
-//       role: updatedUser.role,
-//       token: generateToken(updatedUser._id),
-//     });
-//   } else {
-//     res.status(404).json({ message: "User not found" });
-//   }
-// };
-
 const updateUserProfile = async (req, res) => {
   const { name, email, phone } = req.body;
 
@@ -130,7 +106,7 @@ const updateUserProfile = async (req, res) => {
 };
 
 const updatePatchUserProfile = async (req, res) => {
-  const { id, name, email, phone,password } = req.body;
+  const { id, name, email, phone, password } = req.body;
 
   console.log("User ID (Backend):", id); // Log user ID here
 
@@ -161,104 +137,6 @@ const updatePatchUserProfile = async (req, res) => {
   }
 };
 
-
-
-
-// Delete user
-
-// create a new user
-const createUser = async (req, res) => {
-  const User = new User(req.body);
-  try {
-    const saveUser = await User.save();
-    res.status(200).json({
-      success: true,
-      message: "User is Ceated",
-      data: saveUser,
-    });
-  } catch (e) {
-    res.status(500).json({
-      success: false,
-      message: `internal server error ${e}`,
-    });
-  }
-};
-
-// Get all User
-const allUser = async (req, res) => {
-  try {
-    const user = await User.find();
-    res.status(200).json({
-      success: true,
-      message: "Successfull",
-      data: user,
-    });
-  } catch (e) {
-    res.status(500).json({
-      success: true,
-      message: `Internal Server Error${e}`,
-    });
-  }
-};
-
-// get one user
-const getUser = async (req, res) => {
-  // Get ID from request parameters
-  const id = req.params.id;
-
-  // Check if the ID is a valid MongoDB ObjectId
-  const isValidObjectId = mongoose.Types.ObjectId.isValid(id);
-  if (!isValidObjectId) {
-    return res.status(400).json({
-      success: false,
-      message: `Invalid ID: ${id}`,
-    });
-  }
-
-  try {
-    // Attempt to find the user by ID
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    // If user is found, return the user data
-    res.status(200).json({
-      success: true,
-      message: "Successful",
-      data: user,
-    });
-  } catch (error) {
-    // Log the error for server-side debugging
-    console.error('Error fetching user:', error);
-
-    // Send a generic error message to the client
-    res.status(500).json({
-      success: false,
-      message: 'Server Error. Please try again later.',
-    });
-  }
-};
-
-// Get user profile
-const getUserProfile = async (req, res) => {
-  const user = await User.findById(req.user.id);
-
-  if (user) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    });
-  } else {
-    res.status(404).json({ message: "User not found" });
-  }
-};
-
 // Helper function to create JWT token
 const createToken = (user) => {
   const payload = {
@@ -278,114 +156,10 @@ const createToken = (user) => {
   return token;
 };
 
-// @route   PUT /api/auth/reset-password/:resetToken
-const resetPassword = async (req, res) => {
-  // Get hashed token
-  const resetPasswordToken = crypto.createHash('sha256').update(req.params.resetToken).digest('hex');
-
-  try {
-      const user = await User.findOne({
-          resetPasswordToken,
-          resetPasswordExpire: { $gt: Date.now() },
-      });
-
-      if (!user) {
-          return res.status(400).json({ message: 'Invalid token' });
-      }
-
-      // Set new password
-      user.password = req.body.password;
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-
-      await user.save();
-
-      res.status(200).json({ message: 'Password updated successfully' });
-  } catch (error) {
-      res.status(500).json({ message: 'Error resetting password' });
-  }
-};
-// forgotPassword
-const forgotPassword = async (req, res) => {
-    const { email } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-
-        if (!user) {
-            return res.status(404).json({ message: 'No user found with this email' });
-        }
-
-        // Generate reset token
-        const resetToken = user.getResetPasswordToken();
-        await user.save({ validateBeforeSave: false });
-
-        // Create reset URL
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${resetToken}`;
-
-        const message = `You requested a password reset. Please go to the following link to reset your password: \n\n ${resetUrl}`;
-
-        // Set up email transporter
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USERNAME,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-        });
-
-        await transporter.sendMail({
-            from: `Your App <${process.env.EMAIL_FROM}>`,
-            to: user.email,
-            subject: 'Password Reset Request',
-            text: message,
-        });
-
-        res.status(200).json({ message: 'Email sent' });
-    } catch (error) {
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
-        await user.save({ validateBeforeSave: false });
-
-        res.status(500).json({ message: 'Email could not be sent' });
-    }
-};
-
-// Logout user
-const logout = async (req, res) => {
-  try {
-    // Invalidate the token on the client side (remove from storage)
-
-    // Clear the token from cookies (if you are using cookies for auth)
-    res.clearCookie('token', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-    });
-
-    // Send response indicating successful logout
-    res.status(200).json({
-      success: true,
-      message: 'User logged out successfully',
-    });
-  } catch (error) {
-    console.error('Error logging out:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server Error. Please try again later.',
-    });
-  }
-};
-
-module.exports = {
-  login,
+export {
   register,
+  login,
   updateUserProfile,
-  getUserProfile,
-  getUser,
-  allUser,
-  createUser,
-  resetPassword,
-  forgotPassword,
-  logout,
-  updatePatchUserProfile
+  updatePatchUserProfile,
+  createToken,
 };

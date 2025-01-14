@@ -1,6 +1,6 @@
 
-const express = require("express");
-const mongoose = require("mongoose");
+import express  from "express";
+import mongoose from "mongoose";
 
 const connectToMongo = async () => {
     try {
@@ -11,4 +11,4 @@ const connectToMongo = async () => {
       console.log(error);
     }
   };
-  module.exports = connectToMongo;
+  export default connectToMongo;

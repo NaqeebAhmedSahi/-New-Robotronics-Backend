@@ -1,7 +1,7 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path'); // Import the 'path' module
-const { addVideoGallery, allVideoGallery, deleteGallery } = require('../controller/videogalleryController'); // Assuming your controller is in 'controllers/videoController.js'
+import express  from "express";
+import multer from "multer";
+import path from  "path";
+import { addVideoGallery, allVideoGallery, deleteGallery } from '../controller/videogalleryController.js'; // Assuming your controller is in 'controllers/videoController.js'
 
 const router = express.Router();
 
@@ -29,4 +29,4 @@ router.delete('/deleteGallery/:id',deleteGallery);
 
 
 
-module.exports = router;
+export default router;

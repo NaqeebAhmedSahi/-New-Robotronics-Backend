@@ -1,13 +1,13 @@
-const express = require("express");
+import express  from "express";
 const router = express.Router();
-const {
+import {
   createRoboGenius,
   getAllRoboGenius,
-} = require("../Controller/roboGeniusController");
+} from "../Controller/roboGeniusController.js";
 
 router.post('/addRoboGenius', createRoboGenius);
 router.get('/getallRoboGenius', getAllRoboGenius);
 
 
 
-module.exports = router;
+export default router;

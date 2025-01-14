@@ -1,8 +1,8 @@
-const express = require("express");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const { addProduct, getProducts, deleteProductsById } = require("../controller/ProductController");
+import express  from "express";
+import multer from "multer";
+import path from  "path";
+import fs from "fs";
+import { addProduct, getProducts, deleteProductsById } from "../controller/ProductController.js";
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.delete("/deleteProduct/:id", deleteProductsById);
 
 
 
-module.exports = router;
+export default router;
 
 
 

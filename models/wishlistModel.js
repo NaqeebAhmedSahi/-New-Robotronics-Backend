@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const videoGallerySchema = new mongoose.Schema(
   {
@@ -34,4 +34,5 @@ const videoGallerySchema = new mongoose.Schema(
 );
 
 // Export the model
-module.exports = mongoose.model("VideoGallery", videoGallerySchema);
+const Wishlist  = mongoose.model("VideoGallery", videoGallerySchema);
+export default Wishlist;

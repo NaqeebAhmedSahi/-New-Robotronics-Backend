@@ -1,6 +1,6 @@
-const RoboGenius = require('../models/roboGeniusModel'); // Adjust the path as necessary
-const multer = require('multer');
-const path = require('path');
+import RoboGenius from '../models/roboGeniusModel.js'; // Adjust the path as necessary
+import multer from "multer";
+import path from  "path";
 
 // Multer setup for file uploads
 const storage = multer.diskStorage({
@@ -119,7 +119,7 @@ const getAllRoboGenius = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   createRoboGenius,
   getAllRoboGenius,
 };

@@ -1,16 +1,16 @@
-const express = require("express");
-const {
+import express from 'express';
+import {
   addToWishlist,
   getWishlist,
   removeFromWishlist,
-} = require("../Controller/wishlistController");
-const { protect } = require("../middleware/protect"); // JWT protection
+} from '../Controller/wishlistController.js';
+import { protect } from '../middleware/protect.js'; // JWT protection
 
 const router = express.Router();
 
 // Wishlist routes
-router.post("/wishlist", protect, addToWishlist);
-router.get("/wishlist", protect, getWishlist);
-router.delete("/wishlist/:productId", protect, removeFromWishlist);
+router.post('/wishlist', protect, addToWishlist);
+router.get('/wishlist', protect, getWishlist);
+router.delete('/wishlist/:productId', protect, removeFromWishlist);
 
-module.exports = router;
+export default router;

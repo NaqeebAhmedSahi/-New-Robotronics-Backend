@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose  from "mongoose";
 
 const contentSchema = new mongoose.Schema({
   id: { type: String, required: true },
@@ -36,4 +36,4 @@ const courseSchema = new mongoose.Schema({
   sections: [sectionSchema],
 });
 
-module.exports = mongoose.model("Course", courseSchema);
+export default mongoose.model("Course", courseSchema);

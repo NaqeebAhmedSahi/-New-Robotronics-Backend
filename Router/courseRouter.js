@@ -1,7 +1,7 @@
-const express = require("express");
-const multer = require("multer");
-const path = require("path");
-const { createCourse , getCourses} = require("../controller/courseController");
+import express  from "express";
+import multer from "multer";
+import path from  "path";
+import { createCourse , getCourses} from "../controller/courseController.js";
 
 const router = express.Router();
 
@@ -31,7 +31,7 @@ router.post(
 
 router.get("/get-courses", getCourses);
 
-module.exports = router;
+export default router;
 
 
 

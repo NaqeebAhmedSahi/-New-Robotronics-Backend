@@ -1,6 +1,6 @@
-const Course = require("../models/courseModel");
-const path = require("path");
-const fs = require("fs");
+import Course from "../models/courseModel.js";
+import path from "path";
+import fs from "fs";
 
 // Create Course
 const createCourse = async (req, res) => {
@@ -85,10 +85,7 @@ const getCourses = async (req, res) => {
   }
 };
 
-module.exports = { createCourse , getCourses};
-
-
-
+export { createCourse, getCourses };
 
 
 

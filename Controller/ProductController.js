@@ -1,4 +1,4 @@
-const Product = require("../models/product");
+import Product from "../models/product.js";
 
 const addProduct = async (req, res) => {
   try {
@@ -111,7 +111,7 @@ const deleteProductsById = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   addProduct,
   getProducts,
   deleteProductsById,

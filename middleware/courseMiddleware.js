@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // Ensure this path is correct
+import jwt from "jsonwebtoken";
+import User from "../models/User.js"; // Ensure this path is correct
 
 // Middleware to check if the user is an instructor
-const isInstructor = (req, res, next) => {
+export const isInstructor = (req, res, next) => {
   if (req.user && req.user.isInstructor) {
     next();
   } else {
@@ -14,7 +14,7 @@ const isInstructor = (req, res, next) => {
 };
 
 // Middleware to protect routes
-const protectC = async (req, res, next) => {
+export const protectC = async (req, res, next) => {
   let token;
 
   // Check for token in Authorization header
@@ -54,7 +54,7 @@ const protectC = async (req, res, next) => {
 };
 
 // Middleware to check if the user is an admin
-const isAdmin = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
   } else {
@@ -64,5 +64,3 @@ const isAdmin = (req, res, next) => {
     });
   }
 };
-
-module.exports = { protectC, isInstructor, isAdmin };

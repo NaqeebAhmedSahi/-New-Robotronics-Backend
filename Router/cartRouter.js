@@ -1,6 +1,6 @@
-const express = require('express');
-const { addToCart, getCart, removeFromCart } = require('../controllers/CartController');
-const { protect } = require('../middleware/protect'); // JWT protection
+import express  from "express";
+import { addToCart, getCart, removeFromCart } from '../controllers/CartController.js';
+import { protect } from '../middleware/protect.js'; // JWT protection
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.post('/cart', protect, addToCart);
 router.get('/cart', protect, getCart);
 router.delete('/cart/:productId', protect, removeFromCart);
 
-module.exports = router;
+export default router;

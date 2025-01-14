@@ -1,5 +1,5 @@
-const VideoGallery = require('../models/videogalleryModel');
-const path = require('path'); // Required for handling file paths
+import VideoGallery from '../models/videogalleryModel.js';
+import path  from 'path'; // Required for handling file paths
 
 
 const allVideoGallery = async (req, res) => {
@@ -102,4 +102,4 @@ const deleteGallery = async (req, res) => {
     res.status(500).json({ message: "Server error. Failed to delete gallery." });
   }
 };
-module.exports = {allVideoGallery, addVideoGallery, deleteGallery  };
+export  {allVideoGallery, addVideoGallery, deleteGallery  };

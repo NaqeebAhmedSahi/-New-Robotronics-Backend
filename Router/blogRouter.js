@@ -1,12 +1,12 @@
-const express = require('express');
+import express from  'express';
 const router = express.Router();
-const {
+import {
   getAllPosts,
   createPost,
   getPostById,
   updatePost,
   deletePost,
-} = require('../Controller/blogController');
+} from '../Controller/blogController.js';
 
 // API routes
 router.get('/blog', getAllPosts);
@@ -15,4 +15,4 @@ router.post('/', createPost);
 router.put('/:id', updatePost);
 router.delete('/:id', deletePost);
 
-module.exports = router;
+export default router;

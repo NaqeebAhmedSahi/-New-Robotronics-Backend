@@ -1,5 +1,5 @@
 
-const BlogPost = require("../models/blogModel");
+import BlogPost from "../models/blogModel.js";
 
 // Get all blog posts with pagination
 const getAllPosts = async (req, res) => {
@@ -88,7 +88,7 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getAllPosts,
   createPost,
   getPostById,

@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js'; // Use the correct path if needed
 
 // Middleware to protect routes
 const protect = async (req, res, next) => {
@@ -30,5 +30,4 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect }
-
+export { protect }; // Exporting the protect middleware

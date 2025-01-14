@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const roboGeniusSchema = new mongoose.Schema({
   title: {
@@ -65,4 +65,4 @@ const roboGeniusSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('RoboGenius', roboGeniusSchema);
+export default mongoose.model('RoboGenius', roboGeniusSchema);

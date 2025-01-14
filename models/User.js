@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const crypto = require('crypto');
+import mongoose from "mongoose";
+import crypto from 'crypto';
 
 const UserSchema = new mongoose.Schema(
   {
@@ -70,4 +70,4 @@ try {
   }
 }
 
-module.exports = User;
+export default User;

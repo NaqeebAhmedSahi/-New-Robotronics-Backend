@@ -1,5 +1,5 @@
 // controllers/notificationController.js
-const Notification = require('../models/notification');
+import  Notification from '../models/notification.js';
 
 //   Get all notifications for the authenticated user
 const getNotifications = async (req, res) => {
@@ -37,7 +37,7 @@ const markAsRead = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
     getNotifications,
     markAsRead
 }
