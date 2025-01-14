@@ -82,30 +82,87 @@ const login = async (req, res) => {
 };
 
 // Update user profile
+// const updateUserProfile = async (req, res) => {
+//   const user = await User.findById(req.user.id);
+
+//   if (user) {
+//     user.name = req.body.name || user.name;
+//     user.email = req.body.email || user.email;
+
+//     if (req.body.password) {
+//       user.password = req.body.password;
+//     }
+
+//     const updatedUser = await user.save();
+
+//     res.json({
+//       _id: updatedUser._id,
+//       name: updatedUser.name,
+//       email: updatedUser.email,
+//       role: updatedUser.role,
+//       token: generateToken(updatedUser._id),
+//     });
+//   } else {
+//     res.status(404).json({ message: "User not found" });
+//   }
+// };
+
 const updateUserProfile = async (req, res) => {
-  const user = await User.findById(req.user.id);
+  const { name, email, phone } = req.body;
 
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-
-    if (req.body.password) {
-      user.password = req.body.password;
+  try {
+    const user = await User.findById(req.user.id); // Assuming user is available through req.user.id
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const updatedUser = await user.save();
+    // Update user fields conditionally if they are provided in the request body
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
 
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      role: updatedUser.role,
-      token: generateToken(updatedUser._id),
-    });
-  } else {
-    res.status(404).json({ message: "User not found" });
+    await user.save(); // Save the updated user details
+
+    res.status(200).json({ message: "User profile updated", updatedUser: user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+const updatePatchUserProfile = async (req, res) => {
+  const { id, name, email, phone,password } = req.body;
+
+  console.log("User ID (Backend):", id); // Log user ID here
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the user's fields (only the ones provided in the request)
+    if (name) user.username = name;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+    if (password) user.password = password;
+
+    // Save the updated user data
+    const updatedUser = await user.save();
+
+    return res.status(200).json({
+      updatedUser, // Send back the updated user data
+      message: "User info updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error updating user info" });
+  }
+};
+
+
+
 
 // Delete user
 
@@ -329,5 +386,6 @@ module.exports = {
   createUser,
   resetPassword,
   forgotPassword,
-  logout
+  logout,
+  updatePatchUserProfile
 };
