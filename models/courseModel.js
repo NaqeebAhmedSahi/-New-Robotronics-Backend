@@ -1,32 +1,39 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-// Content Schema
-const ContentSchema = new mongoose.Schema({
+const contentSchema = new mongoose.Schema({
   id: { type: String, required: true },
-  type: { type: String, enum: ['video', 'audio', 'book', 'assignment'], required: true },
+  type: { type: String, required: true }, // e.g., "video", "text", etc.
   name: { type: String, required: true },
-  file: { type: String }, // File path or URL
+  file: { type: String, required: false }, // Path or URL
 });
 
-// Module Schema
-const ModuleSchema = new mongoose.Schema({
+const moduleSchema = new mongoose.Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
-  contents: [ContentSchema], // Array of contents
+  contents: [contentSchema],
 });
 
-// Section Schema
-const SectionSchema = new mongoose.Schema({
+const sectionSchema = new mongoose.Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
-  modules: [ModuleSchema], // Array of modules
+  modules: [moduleSchema],
 });
 
-// Course Schema
-const CourseSchema = new mongoose.Schema({
+const courseSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  sections: [SectionSchema], // Array of sections
+  category: { type: String, required: true },
+  reviews: { type: Number, default: 0 },
+  date: { type: Date, default: Date.now },
+  studentsDownloaded: { type: Number, default: 0 },
+  freeTrial: { type: Boolean, default: false },
+  features: { type: [String], default: [] },
+  whatYouLearn: { type: [String], default: [] },
+  options: { type: [String], default: [] },
+  thumbnail: { type: String, default: null }, // Path to thumbnail image
+  banner: { type: String, default: null }, // Path to banner image
+  video: { type: String, default: null }, // Path to video file
+  sections: [sectionSchema],
 });
 
-module.exports = mongoose.model('Course', CourseSchema);
+module.exports = mongoose.model("Course", courseSchema);

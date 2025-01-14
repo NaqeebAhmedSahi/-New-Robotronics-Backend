@@ -1,16 +1,37 @@
-const express = require('express');
-const { createCourse, getCourses } = require('../controller/courseController');
-const upload = require('../middleware/multerMiddleware');
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const { createCourse , getCourses} = require("../controller/courseController");
 
 const router = express.Router();
 
-// Create Course Route
-router.post('/create-course', upload.array('files', 20), createCourse);
+// Multer configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/Courses"); // Adjust folder path as needed
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
+
+// Route for creating a course
+router.post(
+  "/create-course",
+  upload.fields([
+    { name: "thumbnail", maxCount: 1 },
+    { name: "banner", maxCount: 1 },
+    { name: "video", maxCount: 1 },
+    { name: "files" },
+  ]),
+  createCourse
+);
+
 router.get("/get-courses", getCourses);
 
 module.exports = router;
-
-
 
 
 

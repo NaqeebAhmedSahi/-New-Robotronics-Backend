@@ -5,68 +5,61 @@ const fs = require("fs");
 // Create Course
 const createCourse = async (req, res) => {
   try {
-    // Destructure and parse the form-data
-    const { title, description, sections } = req.body;
-    console.log("Request body:", { title, description, sections }); // Debug input
+    const {
+      title,
+      description,
+      category,
+      reviews,
+      date,
+      studentsDownloaded,
+      freeTrial,
+      features,
+      whatYouLearn,
+      options,
+      sections,
+    } = req.body;
 
-    // Parse the `sections` string into a JavaScript object
-    const parsedSections = JSON.parse(sections);
-    console.log("Parsed sections:", parsedSections); // Debug parsed sections
+    // Files (e.g., thumbnail, banner, video) are uploaded to `req.files`
+    const thumbnail = req.files?.thumbnail?.[0]?.path || null;
+    const banner = req.files?.banner?.[0]?.path || null;
+    const video = req.files?.video?.[0]?.path || null;
 
-    // Ensure the `uploads/Courses` directory exists
-    const coursesDir = path.join(__dirname, "../uploads/Courses");
-    if (!fs.existsSync(coursesDir)) {
-      fs.mkdirSync(coursesDir, { recursive: true });
-      console.log("Created directory:", coursesDir); // Debug directory creation
-    } else {
-      console.log("Directory already exists:", coursesDir); // Debug existing directory
-    }
+    // Parse sections JSON
+    const parsedSections = sections ? JSON.parse(sections) : [];
 
-    // Process the uploaded files and update their paths in the parsedSections object
-    if (req.files) {
-      console.log("Uploaded files:", req.files); // Debug uploaded files
-      req.files.forEach((file) => {
-        const savedFilePath = `/uploads/Courses/${file.filename}`;
-        console.log(`Processed file: ${file.originalname}, saved as: ${savedFilePath}`); // Debug file path
-
-        // Match files to content in the parsedSections object
-        parsedSections.forEach((section) => {
-          section.modules.forEach((module) => {
-            module.contents.forEach((content) => {
-              if (!content.file || !content.file.startsWith("http")) {
-                if (file.originalname.includes(content.name)) {
-                  console.log(`Updating file path for content: ${content.id}`);
-                  content.file = savedFilePath; // Update or assign the file path
-                } else {
-                  console.log(
-                    `Skipping content: ${content.id}, type: ${content.type}, current file: ${content.file || "none"}`
-                  );
-                }
-              } else {
-                console.log(`Content already has a valid URL, skipping: ${content.file}`);
-              }
-            });
-          });
-        });
-      });
-    }
-
-    // Create a new course with updated sections
+    // Create a new course
     const newCourse = new Course({
       title,
       description,
+      category,
+      reviews: parseInt(reviews, 10) || 0,
+      date: date || new Date(),
+      studentsDownloaded: parseInt(studentsDownloaded, 10) || 0,
+      freeTrial: freeTrial === "true",
+      features: JSON.parse(features || "[]"),
+      whatYouLearn: JSON.parse(whatYouLearn || "[]"),
+      options: JSON.parse(options || "[]"),
+      thumbnail,
+      banner,
+      video,
       sections: parsedSections,
     });
-    console.log("New course object:", newCourse); // Debug course object
 
-    // Save the course to the database
-    await newCourse.save();
-    console.log("Course successfully saved:", newCourse); // Debug database save
+    // Save to database
+    const savedCourse = await newCourse.save();
 
-    res.status(201).json({ message: "Course successfully created!", course: newCourse });
+    res.status(201).json({
+      success: true,
+      message: "Course created successfully!",
+      data: savedCourse,
+    });
   } catch (error) {
-    console.error("Error creating course:", error); // Debug error
-    res.status(500).json({ error: "Failed to create course" });
+    console.error("Error creating course:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while creating the course.",
+      error: error.message,
+    });
   }
 };
 
