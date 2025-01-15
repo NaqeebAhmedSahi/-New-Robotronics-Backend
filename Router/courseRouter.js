@@ -1,7 +1,7 @@
 import express  from "express";
 import multer from "multer";
 import path from  "path";
-import { createCourse , getCourses} from "../controller/courseController.js";
+import { createCourse , getCourses, getCourseById} from "../Controller/courseController.js";
 
 const router = express.Router();
 
@@ -30,6 +30,8 @@ router.post(
 );
 
 router.get("/get-courses", getCourses);
+
+router.get("/courses/:id", getCourseById);
 
 export default router;
 

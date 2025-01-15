@@ -1,10 +1,14 @@
-import express  from "express";
+import express from "express";
 import multer from "multer";
-import path from  "path";
+import path from "path";
 import fs from "fs";
-import { addProduct, getProducts, deleteProductsById } from "../controller/ProductController.js";
+import { fileURLToPath } from "url"; // Import fileURLToPath from the url module
+import { dirname } from "path"; // Import dirname from the path module
+import { addProduct, getProducts, deleteProductsById, getProductById, updateProductById } from "../Controller/ProductController.js";
 
 const router = express.Router();
+const __filename = fileURLToPath(import.meta.url); // Get the file path of the current module
+const __dirname = dirname(__filename); // Get the directory name from the file path
 
 // Multer Storage Configuration
 const storage = multer.diskStorage({
@@ -23,59 +27,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Route to Add a Product
-router.post(
-  "/addProduct",
-  upload.any(), // Accepts files with any field name
-  addProduct
-);
+router.post("/addProduct", upload.any(), addProduct);
 
 router.get("/getProducts", getProducts);
 
 router.delete("/deleteProduct/:id", deleteProductsById);
 
+router.get("/getProductById/:id", getProductById);
 
-
+router.put("/updateProductById/:id", upload.any(), updateProductById);
 
 export default router;
-
-
-
-// const express = require('express');
-// const router = express.Router();
-// const { protectC, isAdmin } = require('../middleware/courseMiddleware');
-// const { multerMiddleware } = require('../middleware/multerMiddleware'); // Import Multer middleware
-// const {
-//   getProducts,
-//   getProductById,
-//   addProduct,
-//   updateProduct,
-//   deleteProduct,
-//   getProductsByCategory,
-//   addReview,
-//   getProductReviews,
-//   updateReview,
-//   deleteReview,
-// } = require('../Controller/ProductController');
-
-// // Public routes
-// router.get('/getProducts', getProducts);
-// router.get('/getProductById/:id', getProductById);
-// router.get('/category/:category', getProductsByCategory);
-// router.get('/:id/reviews', getProductReviews);
-// // Add this new route
-// // router.get('/:id/image', getProductImage);
-
-// // Admin-only routes
-// // router.post('/addProduct', protectC, isAdmin, multerMiddleware, addProduct); // Add multerMiddleware here
-// // router.post('/addProduct', multerMiddleware, addProduct); // Add multerMiddleware here
-// router.post('/addProduct', addProduct); // Add multerMiddleware here
-// router.put('/updateProduct/:id',  updateProduct);
-// // router.delete('/:id', protectC, isAdmin, deleteProduct);
-// router.delete('/deleteProduct/:id', deleteProduct);
-
-// // Review routes
-// router.post('/:id/review', protectC, addReview);
-// router.put('/:id/reviews/:reviewId', protectC, isAdmin, updateReview);
-// // router.delete('/:id/reviews/:reviewId', protectC, isAdmin, deleteReview);
-
-// module.exports = router;

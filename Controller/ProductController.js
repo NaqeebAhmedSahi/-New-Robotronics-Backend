@@ -111,10 +111,128 @@ const deleteProductsById = async (req, res) => {
   }
 };
 
+const getProductById = async (req, res) => {
+  try {
+    const productId = req.params.id; // Extract the ID from the route parameter
+    
+    const product = await Product.findById(productId); // Find the course by ID in the database
+
+    if (!product) {
+      return res.status(404).json({ message: `product not found ${productId}` });
+    }
+
+    res.status(200).json(product); // Return the product data
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const updateProductById = async (req, res) => {
+  console.log('Request Parameters:', req.params); // Logs the request parameters, including the product id
+
+  try {
+    const { id } = req.params;
+
+    // Log the id
+    console.log('Product ID:', id);
+
+    // Extract new data from the request body
+    const {
+      name,
+      description,
+      price,
+      category,
+      stock,
+      brand,
+      ratings,
+      productSold,
+      productWatched,
+      onSale,
+      detailsDescription,
+      features,
+    } = req.body;
+
+    // Log the incoming data
+    console.log('Request Body:', req.body);
+
+    if (!name || !description || !price || !category || !stock) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields: name, description, price, category, or stock.",
+      });
+    }
+
+    // Parse the "features" array if it's coming as a string
+    const featuresArray = Array.isArray(features) ? features : JSON.parse(features);
+
+    // Log the features array after parsing
+    console.log('Parsed Features:', featuresArray);
+
+    // Handle the images upload
+    const images = req.files ? req.files.map((file) => `uploads/products/${file.filename}`) : [];
+
+    // Log the images array
+    console.log('Uploaded Images:', images);
+
+    // Find the existing product by id
+    const existingProduct = await Product.findById(id);
+
+    if (!existingProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // Log the existing product before update
+    console.log('Existing Product:', existingProduct);
+
+    // Update the product data with the new values
+    existingProduct.name = name;
+    existingProduct.description = description;
+    existingProduct.price = parseFloat(price);
+    existingProduct.category = category;
+    existingProduct.stock = parseInt(stock);
+    existingProduct.brand = brand;
+    existingProduct.ratings = parseFloat(ratings) || 0;
+    existingProduct.productSold = parseInt(productSold) || 0;
+    existingProduct.productWatched = parseInt(productWatched) || 0;
+    existingProduct.onSale = onSale === "yes";  // Assuming onSale is sent as "yes" or "no"
+    existingProduct.detailsDescription = detailsDescription;
+    existingProduct.features = featuresArray;
+    existingProduct.images = [...existingProduct.images, ...images]; // Add new images while preserving existing ones
+
+    // Log the updated product data before saving
+    console.log('Updated Product:', existingProduct);
+
+    // Save the updated product
+    const updatedProduct = await existingProduct.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating product",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
 export {
   addProduct,
   getProducts,
   deleteProductsById,
+  getProductById,
+  updateProductById,
 };
 
 
