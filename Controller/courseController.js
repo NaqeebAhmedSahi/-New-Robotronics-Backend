@@ -86,6 +86,7 @@ const getCourses = async (req, res) => {
 };
 // Get Courses update
 
+<<<<<<< HEAD
 const getCoursesById = async (req, res) => {
   try {
     // Fetch all courses from the database
@@ -108,6 +109,27 @@ const getCoursesById = async (req, res) => {
   }
 };
 export { createCourse, getCourses, getCoursesById };
+=======
+// Controller to get a course by ID
+const getCourseById = async (req, res) => {
+  try {
+    const courseId = req.params.id; // Extract the ID from the route parameter
+    
+    const course = await Course.findById(courseId); // Find the course by ID in the database
+
+    if (!course) {
+      return res.status(404).json({ message: `Course not found ${courseId}` });
+    }
+
+    res.status(200).json(course); // Return the course data
+  } catch (error) {
+    console.error('Error fetching course:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export { createCourse, getCourses, getCourseById };
+>>>>>>> fd72f9b (Done functionality of Update PProduct)
 
 
 
