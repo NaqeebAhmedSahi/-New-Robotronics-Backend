@@ -2,7 +2,7 @@ import express  from "express";
 import multer from "multer";
 import path from  "path";
 import fs from "fs";
-import { addProduct, getProducts, deleteProductsById } from "../controller/ProductController.js";
+import { addProduct, getProducts, deleteProductsById } from "../Controller/ProductController.js";
 
 const router = express.Router();
 
