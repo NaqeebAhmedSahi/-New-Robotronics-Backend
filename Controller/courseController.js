@@ -84,8 +84,30 @@ const getCourses = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch courses" });
   }
 };
+// Get Courses update
 
-export { createCourse, getCourses };
+const getCoursesById = async (req, res) => {
+  try {
+    // Fetch all courses from the database
+    const id = req.params.id;
+    const courses = await Course.findById(id);
+
+    // Check if any courses exist
+    if (!courses) {
+      return res.status(404).json({ message: "No courses found " + id});
+    }
+
+    // Respond with the fetched courses
+    res.status(200).json({
+      message: "Courses retrieved successfully",
+      courses,
+    });
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ error: "Failed to fetch courses" });
+  }
+};
+export { createCourse, getCourses, getCoursesById };
 
 
 
