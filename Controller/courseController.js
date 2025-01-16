@@ -103,7 +103,76 @@ const getCourseById = async (req, res) => {
   }
 };
 
-export { createCourse, getCourses, getCourseById };
+const deleteCourse = async (req, res) => {
+  try {
+    const courseId = req.params.id; // Get the course ID from the URL params
+
+    // Find the course by ID and delete it
+    const deletedCourse = await Course.findByIdAndDelete(courseId);
+
+    // If course is not found
+    if (!deletedCourse) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Return success message
+    return res.status(200).json({ message: "Course deleted successfully", deletedCourse });
+  } catch (error) {
+    // Catch any errors and return server error
+    console.error(error);
+    return res.status(500).json({ message: "Server error while deleting course" });
+  }
+};
+
+// Controller for updating a course by ID
+export const updateCourseById = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, category, reviews, studentsDownloaded, freeTrial, features, whatYouLearn, options } = req.body;
+  const { thumbnail, banner, video } = req.files;
+
+  try {
+    const course = await Course.findById(id);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Update course fields
+    course.title = title || course.title;
+    course.description = description || course.description;
+    course.category = category || course.category;
+    course.reviews = reviews || course.reviews;
+    course.studentsDownloaded = studentsDownloaded || course.studentsDownloaded;
+    course.freeTrial = freeTrial !== undefined ? freeTrial : course.freeTrial;
+    course.features = features ? features.split(",") : course.features;
+    course.whatYouLearn = whatYouLearn ? whatYouLearn.split(",") : course.whatYouLearn;
+    course.options = options ? options.split(",") : course.options;
+
+    // Handle file uploads
+    if (thumbnail) {
+      // Delete old thumbnail file if exists
+      if (course.thumbnail) fs.unlinkSync(course.thumbnail);
+      course.thumbnail = thumbnail[0].path;
+    }
+    if (banner) {
+      // Delete old banner file if exists
+      if (course.banner) fs.unlinkSync(course.banner);
+      course.banner = banner[0].path;
+    }
+    if (video) {
+      // Delete old video file if exists
+      if (course.video) fs.unlinkSync(course.video);
+      course.video = video[0].path;
+    }
+
+    await course.save();
+    res.status(200).json({ message: "Course updated successfully", course });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error updating course" });
+  }
+};
+
+export { createCourse, getCourses, getCourseById, deleteCourse };
 
 
 

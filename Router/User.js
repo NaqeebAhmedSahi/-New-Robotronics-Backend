@@ -3,15 +3,16 @@ const router = express.Router();
 import {
   register,
   login,
-  // getUserProfile,
+  getUserProfile,
   updateUserProfile,
-  // createUser,
-  // allUser,
-  // getUser,
-  // forgotPassword,
-  // resetPassword,
-  // logout,
-  updatePatchUserProfile
+  createUser,
+  allUser,
+  getUser,
+  forgotPassword,
+  
+  resetPassword,
+  logout,
+  updatePatchUserProfile,
   // deleteUser,
 } from "../Controller/authController.js";
 
@@ -24,10 +25,10 @@ router.post("/register", register);
 router.post("/login", login);
 
 // Logout route
-// router.post('/logout', protect, logout);
+router.post('/logout', protect, logout);
 
 // Get user profile (requires authentication)
-// router.get("/me", getUserProfile);    //router.get("/me", protect, getUserProfile);
+router.get("/me", getUserProfile);    //router.get("/me", protect, getUserProfile);
 
 // update user profile
 router.put("/me", updateUserProfile); //router.put("/me", protect, updateUserProfile);
@@ -35,22 +36,22 @@ router.put("/me", updateUserProfile); //router.put("/me", protect, updateUserPro
 router.patch("/patchMe", updatePatchUserProfile); 
 
 // create new user
-// router.post('/',createUser);
+ router.post('/',createUser);
 
 // get all users
-// router.get('/getAll',allUser);
+ router.get('/getAll',allUser);
 
 // get user by id
-// router.get('/find/:id',getUser);    //  http://localhost:8080/find/66b612746f3c27988f47175d
+ router.get('/find/:id',getUser);    //  http://localhost:8080/find/66b612746f3c27988f47175d
 
 // not tested !!
 
 // forgot-password || /reset-password/:resetToken
-// router.post('/forgot-password', forgotPassword);
-// router.put('/reset-password/:resetToken', resetPassword);
+ router.post('/forgot-password', forgotPassword);
+ router.put('/reset-password/:resetToken', resetPassword);
 
-// router.delete('/:id',deleteUser);
-// router.put('/',updateUser);
+//  router.delete('/:id',deleteUser);
+//  router.put('/',updateUser);
 
 
 // Example of a protected route that requires authentication and admin privileges

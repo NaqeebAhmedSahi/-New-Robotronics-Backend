@@ -1,7 +1,7 @@
 import express  from "express";
 import multer from "multer";
 import path from  "path";
-import { createCourse , getCourses, getCourseById} from "../Controller/courseController.js";
+import { createCourse , getCourses, getCourseById, deleteCourse, updateCourseById} from "../Controller/courseController.js";
 
 const router = express.Router();
 
@@ -31,7 +31,22 @@ router.post(
 
 router.get("/get-courses", getCourses);
 
-router.get("/courses/:id", getCourseById);
+router.get("/coursesById/:id", getCourseById);
+
+router.delete('/coursesById/:id', deleteCourse);
+
+// Route for updating a course by ID
+router.put(
+  "/courses/:id",
+  upload.fields([
+    { name: "thumbnail", maxCount: 1 },
+    { name: "banner", maxCount: 1 },
+    { name: "video", maxCount: 1 },
+  ]),
+  updateCourseById
+);
+
+
 
 export default router;
 
