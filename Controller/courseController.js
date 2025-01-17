@@ -125,54 +125,72 @@ const deleteCourse = async (req, res) => {
 };
 
 // Controller for updating a course by ID
-export const updateCourseById = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, category, reviews, studentsDownloaded, freeTrial, features, whatYouLearn, options } = req.body;
-  const { thumbnail, banner, video } = req.files;
-
+const updateCourseById = async (req, res) => {
   try {
-    const course = await Course.findById(id);
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
+    const { id } = req.params;
+
+    // Parse and handle fields
+    const {
+      title,
+      description,
+      category,
+      reviews,
+      date,
+      studentsDownloaded,
+      freeTrial,
+    } = req.body;
+
+    const features = req.body.features ? JSON.parse(req.body.features) : [];
+    const whatYouLearn = req.body.whatYouLearn ? JSON.parse(req.body.whatYouLearn) : [];
+    const options = req.body.options ? JSON.parse(req.body.options) : [];
+    const sections = req.body.sections ? JSON.parse(req.body.sections) : [];
+
+    // Files (e.g., thumbnail, banner, video)
+    const thumbnail = req.files?.thumbnail?.[0]?.path || null;
+    const banner = req.files?.banner?.[0]?.path || null;
+
+    const updateData = {
+      ...(title && { title }),
+      ...(description && { description }),
+      ...(category && { category }),
+      ...(reviews && { reviews: parseInt(reviews, 10) }),
+      ...(date && { date }),
+      ...(studentsDownloaded && { studentsDownloaded: parseInt(studentsDownloaded, 10) }),
+      ...(freeTrial !== undefined && { freeTrial: freeTrial === "true" }),
+      features,
+      whatYouLearn,
+      options,
+      ...(thumbnail && { thumbnail }),
+      ...(banner && { banner }),
+      sections,
+    };
+
+    const updatedCourse = await Course.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCourse) {
+      return res.status(404).json({ success: false, message: "Course not found." });
     }
 
-    // Update course fields
-    course.title = title || course.title;
-    course.description = description || course.description;
-    course.category = category || course.category;
-    course.reviews = reviews || course.reviews;
-    course.studentsDownloaded = studentsDownloaded || course.studentsDownloaded;
-    course.freeTrial = freeTrial !== undefined ? freeTrial : course.freeTrial;
-    course.features = features ? features.split(",") : course.features;
-    course.whatYouLearn = whatYouLearn ? whatYouLearn.split(",") : course.whatYouLearn;
-    course.options = options ? options.split(",") : course.options;
-
-    // Handle file uploads
-    if (thumbnail) {
-      // Delete old thumbnail file if exists
-      if (course.thumbnail) fs.unlinkSync(course.thumbnail);
-      course.thumbnail = thumbnail[0].path;
-    }
-    if (banner) {
-      // Delete old banner file if exists
-      if (course.banner) fs.unlinkSync(course.banner);
-      course.banner = banner[0].path;
-    }
-    if (video) {
-      // Delete old video file if exists
-      if (course.video) fs.unlinkSync(course.video);
-      course.video = video[0].path;
-    }
-
-    await course.save();
-    res.status(200).json({ message: "Course updated successfully", course });
+    res.status(200).json({
+      success: true,
+      message: "Course updated successfully!",
+      data: updatedCourse,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error updating course" });
+    console.error("Error updating course:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export { createCourse, getCourses, getCourseById, deleteCourse };
+
+
+
+
+export { createCourse, getCourses, getCourseById, deleteCourse ,updateCourseById };
 
 
 
