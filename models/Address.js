@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const addressSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -16,4 +16,6 @@ const addressSchema = new mongoose.Schema({
   isDefaultBilling: { type: Boolean, default: false },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Address', addressSchema);
+const Address = mongoose.model('Address', addressSchema);
+
+export default Address;
