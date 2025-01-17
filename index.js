@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import connectToMongo from './connection/connection.js';
-
+import addressRoutes from './Router/addressRoutes.js';
 // Importing Routers
 import userRouter from './Router/User.js';
 import courseRoutes from './Router/courseRouter.js';
@@ -21,7 +21,7 @@ import cvFormRouter from './Router/cvFormRouter.js';
 import counterRoutes from './Router/counterRouter.js';
 import roboGeniusRouter from './Router/roboGeniusRouter.js';
 import videogalleryRouter from './Router/videogalleryRouter.js';
-
+import parentRouter from './Router/parentRoutes.js';
 // Get the current directory name in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -73,6 +73,12 @@ app.use('/', roboGeniusRouter);
 // Video Gallery routes
 app.use('/', videogalleryRouter);
 
+app.use('/api', addressRoutes);
+ // Use the address routes
+
+ app.use('/api', parentRouter);
+ // Use the address routes
+ 
 // Use the job application routes
 app.use('/cvForm', cvFormRouter);
 
