@@ -40,6 +40,10 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  shippingDays: {
+    type: Number,
+    required: true,
+  },
   detailsDescription: {
     type: String,
   },

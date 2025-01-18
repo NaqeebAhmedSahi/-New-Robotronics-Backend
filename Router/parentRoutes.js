@@ -1,12 +1,12 @@
 import express from 'express';
-import { createParent, getParentById } from '../Controller/parentController.js';
+import { createParent, getParentById, getAllParents } from '../Controller/parentController.js';
 
 const router = express.Router();
 
 // Route to create a new parent with children
 router.post('/parents', createParent);
 
-// Route to get a parent by ID
-router.get('/parents/:id', getParentById);
+router.get('/parents', getAllParents); // Get all parents
+router.get('/parents/:id', getParentById); // Get parent by ID
 
 export default router;

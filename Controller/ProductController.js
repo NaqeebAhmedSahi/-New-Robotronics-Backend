@@ -13,6 +13,7 @@ const addProduct = async (req, res) => {
       productSold,
       productWatched,
       onSale,
+      shippingDays,
       detailsDescription,
       features,
     } = req.body;
@@ -37,6 +38,7 @@ const addProduct = async (req, res) => {
       productSold: parseInt(productSold) || 0,
       productWatched: parseInt(productWatched) || 0,
       onSale: onSale === "yes",
+      shippingDays:  parseInt(shippingDays) || 0,
       detailsDescription,
       features: Array.isArray(features) ? features : [features],
       images,
