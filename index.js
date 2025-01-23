@@ -22,6 +22,9 @@ import counterRoutes from './Router/counterRouter.js';
 import roboGeniusRouter from './Router/roboGeniusRouter.js';
 import videogalleryRouter from './Router/videogalleryRouter.js';
 import parentRouter from './Router/parentRoutes.js';
+import giftCourseRouter from './Router/giftCourseRoutes.js';
+import quickContactRoutes from './Router/quickContactRoutes.js';
+
 // Get the current directory name in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -79,6 +82,10 @@ app.use('/api', addressRoutes);
  app.use('/api', parentRouter);
  // Use the address routes
  
+ app.use('/api', giftCourseRouter);
+
+ app.use('/api', quickContactRoutes);
+
 // Use the job application routes
 app.use('/cvForm', cvFormRouter);
 
