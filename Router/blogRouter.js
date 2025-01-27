@@ -1,18 +1,40 @@
-import express from  'express';
-const router = express.Router();
-import {
-  getAllPosts,
-  createPost,
-  getPostById,
-  updatePost,
-  deletePost,
-} from '../Controller/blogController.js';
+import express from "express";
+import { addBlog, getAllBlogs,deleteBlog } from "../Controller/blogController.js";
+import multer from "multer";
+import fs from "fs";
 
-// API routes
-router.get('/blog', getAllPosts);
-router.post('/', createPost);
-// router.get('/:id', getPostById);
-router.put('/:id', updatePost);
-router.delete('/:id', deletePost);
+// Create uploads directory if not exists
+const uploadDir = "uploads/blogs";
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Configure file storage using Multer to save in "uploads/blogs"
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    },
+});
+
+const upload = multer({ storage });
+
+const router = express.Router();
+
+// Routes
+router.post(
+    "/addBlog",
+    upload.fields([
+        { name: "bannerImage", maxCount: 1 },
+        { name: "thumbnailImage", maxCount: 1 },
+        { name: "authorImage", maxCount: 1 },
+    ]),
+    addBlog
+);
+
+router.get("/getAllBlogs", getAllBlogs);
+router.delete("/deleteBlog/:id", deleteBlog);
 
 export default router;
