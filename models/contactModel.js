@@ -4,6 +4,11 @@ import mongoose from "mongoose";
 
 // Define the schema for the Contact
 const contactSchema = new mongoose.Schema({
+    ParentOrSchool: {
+        type: String,
+        enum: ["school", "parent"],
+        required: true,
+    },
     name: {
         type: String,
         required: true,
@@ -26,6 +31,10 @@ const contactSchema = new mongoose.Schema({
     address: {
         type: String,
         trim: true,
+    },
+    ServicesNeeded: {
+        type: [String],
+        required: true,
     },
     message: {
         type: String,

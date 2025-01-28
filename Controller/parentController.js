@@ -9,21 +9,32 @@ export const createParent = async (req, res) => {
       phone,
       email,
       streetAddress,
-      aptSuiteUnit,
+      aptSuiteUnit = null,
       city,
       state,
       postalCode,
       countryRegion,
       dateOfBirth,
-      gender,
-      occupation,
-      companyName,
-      emergencyContact,
-      preferredContactMethod,
-      specialInstructions,
-      children,
+      gender = null,
+      occupation = null,
+      companyName = null,
+      emergencyContact = {},
+      preferredContactMethod = null,
+      specialInstructions = null,
+      children = [],
     } = req.body;
 
+    // Validation: Check required fields
+    if (!firstName || !lastName || !phone || !email || !streetAddress || !city || !state || !postalCode || !countryRegion || !dateOfBirth) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    // Validation: Check children array
+    if (!Array.isArray(children)) {
+      return res.status(400).json({ message: 'Children should be an array' });
+    }
+
+    // Create a new Parent instance
     const newParent = new Parent({
       firstName,
       lastName,
@@ -45,6 +56,7 @@ export const createParent = async (req, res) => {
       children,
     });
 
+    // Save the new Parent document
     const savedParent = await newParent.save();
     res.status(201).json({ message: 'Parent created successfully', data: savedParent });
   } catch (error) {
@@ -52,6 +64,7 @@ export const createParent = async (req, res) => {
     res.status(500).json({ message: 'Error creating parent', error: error.message });
   }
 };
+
 
 // GET: Retrieve all parents
 export const getAllParents = async (req, res) => {

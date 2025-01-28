@@ -2,10 +2,17 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const childSchema = new Schema({
-  name: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  country: { type: String, required: true },
+  city: { type: String, required: true },
+  houseAddress: { type: String },
+  contact: { type: String },
+  email: { type: String },
+  houseAddress: { type: String },
   dateOfBirth: { type: Date, required: true }, // Replaced age with dateOfBirth
-  grade: { type: String, required: true },
-  gender: { type: String, required: true },
+  // grade: { type: String, required: true },
+  // gender: { type: String, required: true },
   schoolName: { type: String, required: true } // Added schoolName
 }, { timestamps: true });
 

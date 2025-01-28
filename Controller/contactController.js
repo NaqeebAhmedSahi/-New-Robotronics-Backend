@@ -1,39 +1,43 @@
 
 import  Contact from '../models/contactModel.js'; // Adjust path if needed
 
+
 const createContact = async (req, res) => {
-  console.log("Request body:", req.body); // Check if body data is as expected
-
-  const { name, phone, email, schoolName, address, message } = req.body;
-
-  // Simple validation
-  if (!name || !phone || !email || !message) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
-  }
-
   try {
-      // Debug before saving
-      console.log("Saving new contact...");
-
-      const newContact = new Contact({
+      const {
+          ParentOrSchool,
           name,
           phone,
           email,
           schoolName,
           address,
+          ServicesNeeded,
+          message,
+      } = req.body;
+
+      // Validate required fields
+      if (!ParentOrSchool || !name || !phone || !email || !ServicesNeeded || !message) {
+          return res.status(400).json({ message: "All required fields must be filled." });
+      }
+
+      // Create a new contact document
+      const newContact = new Contact({
+          ParentOrSchool,
+          name,
+          phone,
+          email,
+          schoolName: schoolName || "", // Optional field
+          address: address || "",       // Optional field
+          ServicesNeeded: JSON.parse(ServicesNeeded), // Parse if sent as a JSON string
           message,
       });
 
+      // Save the contact in the database
       await newContact.save();
 
-      res.status(201).json({
-          success: true,
-          message: "Message received!",
-          data: newContact,
-      });
+      res.status(201).json({ message: "Contact created successfully", contact: newContact });
   } catch (error) {
-      console.error("Error in createContact function:", error); // Detailed error log
-      res.status(500).json({ success: false, message: `Server error: ${error.message}` });
+      res.status(500).json({ message: "Error creating contact", error: error.message });
   }
 };
 
